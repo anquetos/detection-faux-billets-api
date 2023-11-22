@@ -146,7 +146,7 @@ app.layout = html.Div(
                         html.B('Python '),
                         'grâce à la librairie de ',
                         html.I('Machine Learning '),
-                        html.B('scikit-learn', style={'font-family':'Ubuntu Mono'}),
+                        html.B('scikit-learn'),
                         '.'
                     ],
                 ),
@@ -345,7 +345,9 @@ def update_csv_data_table(contents):
                         columns=[
                             {'name': col, 'id': col} for col in df.columns
                         ],
-                        page_size=10)
+                        page_size=10,
+                        style_cell={'textAlign': 'center'}
+                        )
 
 # Vérifie que les données à analyser sont complètes                
 @app.callback(
@@ -541,16 +543,18 @@ def update_detect_results(n_clicks):
 
         df_results = df_results.drop(columns=['prob_0', 'prob_1'])
 
+        # Conversion des valeurs en pourcentage dans le DataFrame
+        df_results['probability_estimates'] = (
+            df_results['probability_estimates'] * 100
+        ).apply(lambda x: f'{x:.8f} %')
+
         # Affiche les résultats de la détection
         fake_banknote_list = list(
             df_results.loc[df_results['is_fake'] == True, 'id'])
         
+    
         global nb_fake
         nb_fake = len(fake_banknote_list)
-
-        fake_banknote_list = ', '.join(fake_banknote_list)
-        if nb_fake == 0:
-            fake_banknote_list = 'None'
 
         return html.Div(
             children=[
@@ -560,8 +564,9 @@ def update_detect_results(n_clicks):
 
                 html.Div(
                     children=[
-                        html.B(f'{nb_fake} faux billets détectés ! '),
-                        (f'Id : {fake_banknote_list}.')
+                        (f'{len(X)} billet(s) analysé(s)'),
+                        dcc.Markdown('&#x1F50E;'),
+                        html.B(f'{nb_fake} faux billet(s) détecté(s) !')
                     ],
                     style={
                         'height': '48px',
@@ -571,7 +576,10 @@ def update_detect_results(n_clicks):
                         'borderRadius': '5px',
                         'textAlign': 'center',
                         'border-color': '#D1D0D0',
-                        'background': '#F0EFEF'
+                        'background': '#F0EFEF',
+                        'display': 'flex',
+                        'justify-content': 'center',
+                        'align-items': 'center'
                     }
                 ),
 
@@ -592,10 +600,23 @@ def update_detect_results(n_clicks):
                         columns=[
                             {'name': col, 'id': col} for col in df_results.columns
                         ],
-                        page_size=10
+                        page_size=10,
+                        style_cell={'textAlign': 'center'},
+                        filter_action='native',
+                        sort_action='native',
+                        style_data_conditional=[
+                            {
+                                'if': {
+                                    'column_id': ['id', 'is_fake', 'probability_estimates'],
+                                    'filter_query': '{is_fake} contains "true"'
+                                },
+                                'backgroundColor': '#F4C1C1',
+                                'color': '#A91F1F'
+                            }
+                        ]
                     ),
                     style={
-                        'width': '50%',
+                        'width': '75%',
                         'margin': 'auto',
                         'margin-top': '1%',
                         'margin-bottom': '3%'

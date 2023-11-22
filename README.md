@@ -37,9 +37,9 @@ Si les données d'entrées ne sont pas valides, l'outil affiche le message d'err
 Si les données sont correctes, le bouton **Prédire** apparaît, cliquer dessus pour effectuer la prédiction.<br>
 <img src='./images/dash-app-valid-file.png' width=800px /><br>
 3. L'outil affiche les résultats. :<br>
-L'identifiant des faux billets.<br>
-<img src='./images/dash-app-fake-banknote-ids.png' width=800px /><br>
-Les statistiques liés à la prédiction.<br>
+Le nombre de faux billets détectés.<br>
+<img src='./images/dash-app-fake-banknote-nb.png' width=800px /><br>
+Les statistiques liés à la prédiction avec possibilité de trier et filtrer résultats.<br>
 <img src='./images/dash-app-prediction-stats.png' width=480px /><br>
 Un *scatter plot* intéractif permettant de visualiser les variables deux par deux et de les discriminer en fonction de l'authenticité des billets.<br>
 <img src='./images/dash-app-scatter.png' width=800px /><br>
